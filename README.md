@@ -10,7 +10,7 @@ The starting code for this was based off of the
 created by [RoaringCatGames.](http://roaringcatgames.com/)
 I used the code provided as a base.
 
-The starting code can be found in the package [com.exovum.testgame](com.exovum.testgame)
+The starting code can be found in the package [com.exovum.testgame](core/src/com/exovum/testgame)
 
 Also, see [README-sample.md](README-sample.md).
 
