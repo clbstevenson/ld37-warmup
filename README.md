@@ -6,7 +6,7 @@ It is used as a way to get started with libGDX, Screens, Sounds, Ashley ECS, and
 ##Sample Code
 
 The starting code for this was based off of the
-[libgdx-ashley-box2d-example created by RoaringCatGames.](https://www.github.com/RoaringCatGames/libgdx-ashley-box2d-example)
+[libgdx-ashley-box2d-example](https://www.github.com/RoaringCatGames/libgdx-ashley-box2d-example) created by [RoaringCatGames.](http://roaringcatgames.com/)
 I used the code provided as a base.
 
 Also, see [README-sample.md](README-sample.md).
