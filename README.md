@@ -6,8 +6,11 @@ It is used as a way to get started with libGDX, Screens, Sounds, Ashley ECS, and
 ##Sample Code
 
 The starting code for this was based off of the
-[libgdx-ashley-box2d-example](https://www.github.com/RoaringCatGames/libgdx-ashley-box2d-example) created by [RoaringCatGames.](http://roaringcatgames.com/)
+[libgdx-ashley-box2d-example](https://www.github.com/RoaringCatGames/libgdx-ashley-box2d-example)
+created by [RoaringCatGames.](http://roaringcatgames.com/)
 I used the code provided as a base.
+
+The starting code can be found in the package [com.exovum.testgame](com.exovum.testgame)
 
 Also, see [README-sample.md](README-sample.md).
 
