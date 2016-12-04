@@ -1,5 +1,0 @@
-The starting sample code in the package com.exovum.testgame is sample code created by RoaringCat games.
-The starting code can be found here: https://github.com/RoaringCatGames/libgdx-ashley-box2d-example.
-It is a smple of using libgdx, Ashley (an Entity Component System), and Box2D.
-I do not claim to have created the code in this com.exovum.testgame package.
-    [renamed from com.roaringcatgames.testgame to fit along with my other packages]
