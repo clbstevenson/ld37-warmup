@@ -24,7 +24,6 @@ import com.exovum.ld37warmup.systems.PhysicsSystem;
 import com.exovum.ld37warmup.systems.RenderingSystem;
 import com.exovum.ld37warmup.systems.UselessStateSwapSystem;
 import com.exovum.testgame.IScreenDispatcher;
-import com.exovum.testgame.ScreenDispatcher;
 
 /**
  * Created by exovu_000 on 12/3/2016.
@@ -40,14 +39,16 @@ public class GameScreenWarmup extends ScreenAdapter {
     private PooledEngine engine; // Ashley ECS engine
 
     private SpriteBatch batch;
+    private IScreenDispatcher dispatcher;
 
-    public GameScreenWarmup(SpriteBatch batch, IScreenDispatcher screenDispatcher) {
+    public GameScreenWarmup(SpriteBatch batch, IScreenDispatcher dispatcher) {
         super();
         this.batch = batch;
+        this.dispatcher = dispatcher;
     }
 
     private void init() {
-        Gdx.app.log("GameScreenWarmup", "Initializing");
+        Gdx.app.log("Game Screen Warmup", "Initializing");
         initialized = true;
 
         // world has 0 x-acceleration, and -9.8f y-accel [gravity]

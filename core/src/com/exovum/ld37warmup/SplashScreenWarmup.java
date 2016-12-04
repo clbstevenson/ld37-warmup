@@ -43,7 +43,7 @@ public class SplashScreenWarmup extends ScreenAdapter {
             Gdx.gl20.glLineWidth(1f);
             shapeRenderer.setProjectionMatrix(cam.combined);
             shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-            shapeRenderer.setColor(Color.ORANGE);
+            shapeRenderer.setColor(Color.CYAN);
             shapeRenderer.rect(0, 0, cam.viewportWidth * Assets.am.getProgress(), cam.viewportHeight / 5f);
             //shapeRenderer.rect(0, 0, Assets.am.getProgress(), cam.viewportHeight / 5f);
             //Gdx.app.log("Splash Screen", "Assets.am.getProgress() = " + Assets.am.getProgress());
@@ -52,5 +52,6 @@ public class SplashScreenWarmup extends ScreenAdapter {
             shapeRenderer.end();
         }
     }
+
 }
 

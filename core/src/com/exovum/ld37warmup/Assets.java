@@ -1,6 +1,8 @@
 package com.exovum.ld37warmup;
 
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.audio.Sound;
+import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -24,14 +26,22 @@ public class Assets {
         // Load all of the assets via am.load(asset_to_load, asset_class_type) [Texture.class, etc]
         // load the animations atlas to reference and find the connected animations
         am.load(ANIMATION_ATLAS, TEXTURE_ATLAS);
+        am.load("sounds/explosion-1.wav", SOUND);
+        am.load("sounds/drop.wav", SOUND);
+        am.load("sounds/song1.wav", MUSIC);
+
 
         return am;
     }
 
+    // Use the static references below to improve readability and writability
+    // when including new assets to load
     private static final String FONT = "";
     private static final String ANIMATION_ATLAS = "animations/animations.atlas";
 
     private static Class<TextureAtlas> TEXTURE_ATLAS = TextureAtlas.class;
+    private static Class<Sound> SOUND = Sound.class;
+    private static Class<Music> MUSIC = Music.class;
 
     public static TextureRegion splashScreen;
 
