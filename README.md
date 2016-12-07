@@ -12,5 +12,5 @@ I used the code provided as a base.
 
 The starting code can be found in the package [com.exovum.testgame](core/src/com/exovum/testgame)
 
-YAlso, see [README-sample.md](README-sample.md) as the original README.
+Also, see [README-sample.md](README-sample.md) as the original README.
 
