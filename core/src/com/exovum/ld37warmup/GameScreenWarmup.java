@@ -297,7 +297,7 @@ public class GameScreenWarmup extends ScreenAdapter {
     }
 
     private void addTreeEntityAt(World world, float x, float y) {
-        Entity e = new Entity(); //or? engine.createEntity();
+        Entity e = engine.createEntity(); //new Entity(); //or? engine.createEntity();
         // Add Tree Component to Tree Entity
         e.add(new TreeComponent());
 
