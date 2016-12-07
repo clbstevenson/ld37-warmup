@@ -9,7 +9,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.Array;
-import com.exovum.testgame.components.TextureComponent;
+import com.exovum.ld37warmup.components.TextureComponent;
+import com.exovum.ld37warmup.components.TransformComponent;
 
 import java.util.Comparator;
 
@@ -44,15 +45,16 @@ public class RenderingSystem extends SortedIteratingSystem {
     private OrthographicCamera cam;
 
     private ComponentMapper<TextureComponent> textureM;
-    private ComponentMapper<com.exovum.testgame.components.TransformComponent> transformM;
+    private ComponentMapper<TransformComponent> transformM;
 
     public RenderingSystem(SpriteBatch batch) {
-        super(Family.all(com.exovum.testgame.components.TransformComponent.class, TextureComponent.class).get(), new ZComparator());
+        super(Family.all(TransformComponent.class, TextureComponent.class).get(), new ZComparator());
 
         textureM = ComponentMapper.getFor(TextureComponent.class);
-        transformM = ComponentMapper.getFor(com.exovum.testgame.components.TransformComponent.class);
+        transformM = ComponentMapper.getFor(TransformComponent.class);
 
         renderQueue = new Array<Entity>();
+
 
         this.batch = batch;
 
@@ -73,7 +75,7 @@ public class RenderingSystem extends SortedIteratingSystem {
 
         for (Entity entity : renderQueue) {
             TextureComponent tex = textureM.get(entity);
-            com.exovum.testgame.components.TransformComponent t = transformM.get(entity);
+            TransformComponent t = transformM.get(entity);
 
             if (tex.region == null || t.isHidden) {
                 continue;

@@ -133,47 +133,73 @@ public class GameScreenWarmup extends ScreenAdapter {
 
     private Entity buildTreeEntity(World world) {
         Entity e = engine.createEntity();
+        // Add Tree Component to Tree Entity
+        e.add(new TreeComponent());
 
-        Vector2 screenMeters = RenderingSystem.getScreenSizeInMeters();
-        Gdx.app.log("Game Screen Warmup", "Screen Meters: " + screenMeters.x + " x " + screenMeters.y);
-        Vector2 screenPixels = RenderingSystem.getScreenSizeInPixesl();
-        Gdx.app.log("Game Screen Warmup", "Screen Pixels:" + screenPixels.x + " x " + screenPixels.y);
+        // Add Animation Component to Tree Entity
+        AnimationComponent a = new AnimationComponent();
+        // for tag "DEFAULT" put an animation with parameter: duration=1/8f, TextureRegion, PlayMode;
+        a.animations.put("DEFAULT", new Animation(1f/8f, Assets.getTreeArray(), Animation.PlayMode.LOOP));
+        a.animations.put("RUNNING", new Animation(1f/8f, Assets.getTreeMoveArray(), Animation.PlayMode.LOOP));
+        e.add(a);
+
+        // Add State Component to Tree Entity
+        StateComponent state = new StateComponent();
+        state.set("DEFAULT");
+        e.add(state);
+
+        // Add Texture Component to Tree Entity
+        TextureComponent tc = new TextureComponent();
+        e.add(tc);
+
+        // Add TransformComponent to Tree Entity
+        TransformComponent tfc = new TransformComponent();
+        tfc.position.set(30f, 10f, 1f);
+        tfc.rotation = 0f; // try no rotation
+        tfc.scale.set(1.0f, 1.0f); // try no scale
+        e.add(tfc);
 
         BodyDef bodyDef = new BodyDef();
         bodyDef.type = BodyDef.BodyType.StaticBody;
 
         // set position of body into the world
-        bodyDef.position.set(new Vector2(6f, 1f));
+        //bodyDef.position.set(new Vector2(6f, 1f));
+        bodyDef.position.set(10f, 23f);
 
         BodyComponent bc = new BodyComponent();
         // create body from bodyDef and add to the world
         bc.body = world.createBody(bodyDef);
 
-        PolygonShape treeBox = new PolygonShape();
-        treeBox.setAsBox(5f, 1f);
+        CircleShape circle = new CircleShape();
+        circle.setRadius(2f);
+        //PolygonShape treeBox = new PolygonShape();
+        //treeBox.setAsBox(5f, 1f);
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = circle;
+        fixtureDef.density = 20f;
+        fixtureDef.friction = 0.4f;
+        fixtureDef.restitution = 0.6f; // makes it bounce slightly
+        bc.body.createFixture(fixtureDef);
+        //bc.body.createFixture(treeBox, 0.0f);
 
-        bc.body.createFixture(treeBox, 0.0f);
+        // Clean Up
+        circle.dispose();
+        //treeBox.dispose();
 
-        //clean up
-        treeBox.dispose();
-
+        // Add Body Component to Tree Entity
         e.add(bc);
 
-
-        AnimationComponent a = new AnimationComponent();
-        a.animations.put("DEFAULT", new Animation(1f/16f, Assets.getTreeArray(), Animation.PlayMode.LOOP));
-        a.animations.put("RUNNING", new Animation(1f/8f, Assets.getTreeMoveArray(), Animation.PlayMode.LOOP));
-        e.add(a);
-        StateComponent state = new StateComponent();
-        state.set("DEFAULT");
-        e.add(state);
-        TextureComponent tc = new TextureComponent();
-        e.add(tc);
+        // This isn't used anymore?
+        Vector2 screenMeters = RenderingSystem.getScreenSizeInMeters();
+        Gdx.app.log("Game Screen Warmup", "Screen Meters: " + screenMeters.x + " x " + screenMeters.y);
+        Vector2 screenPixels = RenderingSystem.getScreenSizeInPixesl();
+        Gdx.app.log("Game Screen Warmup", "Screen Pixels:" + screenPixels.x + " x " + screenPixels.y);
 
         return e;
     }
 
     private Entity buildBall(World world) {
+        // TODO buildBall
         Entity e = engine.createEntity();
         e.add(new BallComponent());
 

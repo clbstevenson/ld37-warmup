@@ -59,10 +59,12 @@ public class Assets {
 
 
     public static Array<TextureAtlas.AtlasRegion> getTreeArray() {
+        Array<TextureAtlas.AtlasRegion> treeArray = am.get(ANIMATION_ATLAS, TEXTURE_ATLAS).findRegions("tree/tree");
         return am.get(ANIMATION_ATLAS, TEXTURE_ATLAS).findRegions("tree/tree");
     }
 
     public static Array<TextureAtlas.AtlasRegion> getTreeMoveArray() {
+        Array<TextureAtlas.AtlasRegion> treeArray = am.get(ANIMATION_ATLAS, TEXTURE_ATLAS).findRegions("tree/lights");
         return am.get(ANIMATION_ATLAS, TEXTURE_ATLAS).findRegions("tree/lights");
     }
 }

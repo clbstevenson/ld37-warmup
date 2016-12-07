@@ -2,14 +2,15 @@ package com.exovum.ld37warmup.systems;
 
 import com.badlogic.ashley.core.ComponentMapper;
 import com.badlogic.ashley.core.Entity;
+import com.exovum.ld37warmup.components.TransformComponent;
 
 import java.util.Comparator;
 
 public class ZComparator implements Comparator<Entity> {
-    private ComponentMapper<com.exovum.testgame.components.TransformComponent> transformM;
+    private ComponentMapper<TransformComponent> transformM;
 
     public ZComparator(){
-        transformM = ComponentMapper.getFor(com.exovum.testgame.components.TransformComponent.class);
+        transformM = ComponentMapper.getFor(TransformComponent.class);
     }
 
     @Override

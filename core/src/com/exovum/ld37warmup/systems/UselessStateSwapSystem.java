@@ -7,8 +7,8 @@ import com.badlogic.ashley.systems.IteratingSystem;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.utils.Array;
-import com.exovum.testgame.components.PuffinComponent;
-import com.exovum.testgame.components.StateComponent;
+import com.exovum.ld37warmup.components.TreeComponent;
+import com.exovum.ld37warmup.components.StateComponent;
 
 public class UselessStateSwapSystem extends IteratingSystem {
 
@@ -17,7 +17,8 @@ public class UselessStateSwapSystem extends IteratingSystem {
     private Array<Entity> stateQueue;
 
     public UselessStateSwapSystem(){
-        super(Family.all(StateComponent.class, PuffinComponent.class).get());
+        //super(Family.all(StateComponent.class, PuffinComponent.class).get());
+        super(Family.all(StateComponent.class, TreeComponent.class).get());
         sm = ComponentMapper.getFor(StateComponent.class);
         stateQueue = new Array<>();
     }

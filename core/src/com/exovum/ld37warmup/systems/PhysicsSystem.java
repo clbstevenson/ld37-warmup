@@ -8,7 +8,8 @@ import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
-import com.exovum.testgame.components.TransformComponent;
+import com.exovum.ld37warmup.components.BodyComponent;
+import com.exovum.ld37warmup.components.TransformComponent;
 
 public class PhysicsSystem extends IteratingSystem {
 
@@ -18,11 +19,11 @@ public class PhysicsSystem extends IteratingSystem {
     private World world;
     private Array<Entity> bodiesQueue;
 
-    private ComponentMapper<com.exovum.testgame.components.BodyComponent> bm = ComponentMapper.getFor(com.exovum.testgame.components.BodyComponent.class);
+    private ComponentMapper<BodyComponent> bm = ComponentMapper.getFor(BodyComponent.class);
     private ComponentMapper<TransformComponent> tm = ComponentMapper.getFor(TransformComponent.class);
 
     public PhysicsSystem(World world) {
-        super(Family.all(com.exovum.testgame.components.BodyComponent.class, TransformComponent.class).get());
+        super(Family.all(BodyComponent.class, TransformComponent.class).get());
 
         this.world = world;
         this.bodiesQueue = new Array<>();
@@ -40,7 +41,7 @@ public class PhysicsSystem extends IteratingSystem {
             //Entity Queue
             for (Entity entity : bodiesQueue) {
                 TransformComponent tfm = tm.get(entity);
-                com.exovum.testgame.components.BodyComponent bodyComp = bm.get(entity);
+                BodyComponent bodyComp = bm.get(entity);
                 Vector2 position = bodyComp.body.getPosition();
                 tfm.position.x = position.x;
                 tfm.position.y = position.y;
