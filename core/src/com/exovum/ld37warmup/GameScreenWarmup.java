@@ -145,7 +145,7 @@ public class GameScreenWarmup extends ScreenAdapter {
 
         // Add State Component to Tree Entity
         StateComponent state = new StateComponent();
-        state.set("DEFAULT");
+        state.set("RUNNING");
         e.add(state);
 
         // Add Texture Component to Tree Entity
@@ -155,8 +155,8 @@ public class GameScreenWarmup extends ScreenAdapter {
         // Add TransformComponent to Tree Entity
         TransformComponent tfc = new TransformComponent();
         tfc.position.set(30f, 10f, 1f);
-        tfc.rotation = 0f; // try no rotation
-        tfc.scale.set(1.0f, 1.0f); // try no scale
+        tfc.rotation = 15f; // try no rotation
+        tfc.scale.set(0.25f, 0.25f); // try no scale
         e.add(tfc);
 
         BodyDef bodyDef = new BodyDef();

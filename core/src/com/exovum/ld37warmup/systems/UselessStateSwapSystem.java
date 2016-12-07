@@ -19,6 +19,7 @@ public class UselessStateSwapSystem extends IteratingSystem {
     public UselessStateSwapSystem(){
         //super(Family.all(StateComponent.class, PuffinComponent.class).get());
         super(Family.all(StateComponent.class, TreeComponent.class).get());
+        //super(Family.all(StateComponent.class).get());
         sm = ComponentMapper.getFor(StateComponent.class);
         stateQueue = new Array<>();
     }
