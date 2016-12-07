@@ -1,17 +1,21 @@
 package com.exovum.ld37warmup;
 
+import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.math.Frustum;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.utils.Array;
 import com.exovum.ld37warmup.components.BodyComponent;
 import com.exovum.ld37warmup.components.TransformComponent;
 import com.exovum.ld37warmup.components.TreeComponent;
@@ -68,7 +72,16 @@ public class GameScreenWarmup extends ScreenAdapter {
         //Entity e = buildBall(world);
         //Entity e = buildTree(world);
         //engine.addEntity(e);
-        engine.addEntity(buildTreeEntity(world));
+        //engine.addEntity(buildTreeEntity(world));
+        //buildSmallForest(engine, world);
+        //Array<Entity> trees = getTreeLayer(world);
+        //for(Entity treeEntity: getTreeLayer(world)) {
+        //    engine.addEntity(treeEntity);
+        //}
+        addTreeEntityAt(world, 4f, 2f);
+        addTreeEntityAt(world, 10f, 2f);
+        addTreeEntityAt(world, 14f, 2f);
+        //addTreeLayer(world);
 
         initialized = true;
     }
@@ -132,6 +145,10 @@ public class GameScreenWarmup extends ScreenAdapter {
     }
 
     private Entity buildTreeEntity(World world) {
+        // Call buildTreeEntityAt(world, position) where position is a default Vector3 value
+        return buildTreeEntityAt(world, new Vector3(10f, 2.2f, 1));
+
+        /*
         Entity e = engine.createEntity();
         // Add Tree Component to Tree Entity
         e.add(new TreeComponent());
@@ -152,11 +169,15 @@ public class GameScreenWarmup extends ScreenAdapter {
         TextureComponent tc = new TextureComponent();
         e.add(tc);
 
+        // Use a Vector3 so the TransformComponent and the Body are at the same location
+        Vector3 position = new Vector3(10f, 2f, 1f);
+
         // Add TransformComponent to Tree Entity
         TransformComponent tfc = new TransformComponent();
-        tfc.position.set(30f, 10f, 1f);
-        tfc.rotation = 15f; // try no rotation
-        tfc.scale.set(0.25f, 0.25f); // try no scale
+        //tfc.position.set(30f, 60f, 1f);
+        tfc.position.set(position);
+        tfc.rotation = 40f;
+        tfc.scale.set(0.25f, 0.25f);
         e.add(tfc);
 
         BodyDef bodyDef = new BodyDef();
@@ -164,7 +185,9 @@ public class GameScreenWarmup extends ScreenAdapter {
 
         // set position of body into the world
         //bodyDef.position.set(new Vector2(6f, 1f));
-        bodyDef.position.set(10f, 23f);
+        //bodyDef.position.set(10f, 23f);
+        // Use the X and Y values from the Vector3. Make bodyDef and tfc use same position
+        bodyDef.position.set(position.x, position.y);
 
         BodyComponent bc = new BodyComponent();
         // create body from bodyDef and add to the world
@@ -196,6 +219,185 @@ public class GameScreenWarmup extends ScreenAdapter {
         Gdx.app.log("Game Screen Warmup", "Screen Pixels:" + screenPixels.x + " x " + screenPixels.y);
 
         return e;
+        */
+    }
+
+    private Entity buildTreeEntityAt(World world, Vector3 position) {
+        Entity e = new Entity(); //or? engine.createEntity();
+        // Add Tree Component to Tree Entity
+        e.add(new TreeComponent());
+
+        // Add Animation Component to Tree Entity
+        AnimationComponent a = new AnimationComponent();
+        // for tag "DEFAULT" put an animation with parameter: duration=1/8f, TextureRegion, PlayMode;
+        a.animations.put("DEFAULT", new Animation(1f/8f, Assets.getTreeArray(), Animation.PlayMode.LOOP));
+        a.animations.put("RUNNING", new Animation(1f/8f, Assets.getTreeMoveArray(), Animation.PlayMode.LOOP));
+        e.add(a);
+
+        // Add State Component to Tree Entity
+        StateComponent state = new StateComponent();
+        state.set("RUNNING");
+        e.add(state);
+
+        // Add Texture Component to Tree Entity
+        TextureComponent tc = new TextureComponent();
+        e.add(tc);
+
+        // Use a Vector3 so the TransformComponent and the Body are at the same location
+        // * Use the parameter instead for position
+        //Vector3 position = new Vector3(10f, 2f, 1f);
+
+        // Add TransformComponent to Tree Entity
+        TransformComponent tfc = new TransformComponent();
+        //tfc.position.set(30f, 60f, 1f);
+        tfc.position.set(position);
+        tfc.rotation = 40f;
+        tfc.scale.set(0.25f, 0.25f);
+        e.add(tfc);
+
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.StaticBody;
+
+        // set position of body into the world
+        //bodyDef.position.set(new Vector2(6f, 1f));
+        //bodyDef.position.set(10f, 23f);
+        // Use the X and Y values from the Vector3. Make bodyDef and tfc use same position
+        bodyDef.position.set(position.x, position.y);
+
+        BodyComponent bc = new BodyComponent();
+        // create body from bodyDef and add to the world
+        bc.body = world.createBody(bodyDef);
+
+        CircleShape circle = new CircleShape();
+        circle.setRadius(2f);
+        //PolygonShape treeBox = new PolygonShape();
+        //treeBox.setAsBox(5f, 1f);
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = circle;
+        fixtureDef.density = 20f;
+        fixtureDef.friction = 0.4f;
+        fixtureDef.restitution = 0.6f; // makes it bounce slightly
+        bc.body.createFixture(fixtureDef);
+        //bc.body.createFixture(treeBox, 0.0f);
+
+        // Clean Up
+        circle.dispose();
+        //treeBox.dispose();
+
+        // Add Body Component to Tree Entity
+        e.add(bc);
+
+        // This isn't used anymore?
+        Vector2 screenMeters = RenderingSystem.getScreenSizeInMeters();
+        Gdx.app.log("Game Screen Warmup", "Screen Meters: " + screenMeters.x + " x " + screenMeters.y);
+        Vector2 screenPixels = RenderingSystem.getScreenSizeInPixesl();
+        Gdx.app.log("Game Screen Warmup", "Screen Pixels:" + screenPixels.x + " x " + screenPixels.y);
+
+        return e;
+    }
+
+    private void addTreeEntityAt(World world, float x, float y) {
+        Entity e = new Entity(); //or? engine.createEntity();
+        // Add Tree Component to Tree Entity
+        e.add(new TreeComponent());
+
+        // Add Animation Component to Tree Entity
+        AnimationComponent a = new AnimationComponent();
+        // for tag "DEFAULT" put an animation with parameter: duration=1/8f, TextureRegion, PlayMode;
+        a.animations.put("DEFAULT", new Animation(1f/8f, Assets.getTreeArray(), Animation.PlayMode.LOOP));
+        a.animations.put("RUNNING", new Animation(1f/8f, Assets.getTreeMoveArray(), Animation.PlayMode.LOOP));
+        e.add(a);
+
+        // Add State Component to Tree Entity
+        StateComponent state = new StateComponent();
+        state.set("RUNNING");
+        e.add(state);
+
+        // Add Texture Component to Tree Entity
+        TextureComponent tc = new TextureComponent();
+        e.add(tc);
+
+        // Use a Vector3 so the TransformComponent and the Body are at the same location
+        // * Use the parameter instead for position
+        //Vector3 position = new Vector3(10f, 2f, 1f);
+
+        // Add TransformComponent to Tree Entity
+        TransformComponent tfc = new TransformComponent();
+        //tfc.position.set(30f, 60f, 1f);
+        //tfc.position.set(position);
+        tfc.position.set(x, y, 1);
+        tfc.rotation = 40f;
+        tfc.scale.set(0.25f, 0.25f);
+        e.add(tfc);
+
+        BodyDef bodyDef = new BodyDef();
+        bodyDef.type = BodyDef.BodyType.StaticBody;
+
+        // set position of body into the world
+        //bodyDef.position.set(new Vector2(6f, 1f));
+        //bodyDef.position.set(10f, 23f);
+        // Use the X and Y values from the Vector3. Make bodyDef and tfc use same position
+        //bodyDef.position.set(position.x, position.y);
+        bodyDef.position.set(x, y);
+
+        BodyComponent bc = new BodyComponent();
+        // create body from bodyDef and add to the world
+        bc.body = world.createBody(bodyDef);
+
+        CircleShape circle = new CircleShape();
+        circle.setRadius(2f);
+        //PolygonShape treeBox = new PolygonShape();
+        //treeBox.setAsBox(5f, 1f);
+        FixtureDef fixtureDef = new FixtureDef();
+        fixtureDef.shape = circle;
+        fixtureDef.density = 20f;
+        fixtureDef.friction = 0.4f;
+        fixtureDef.restitution = 0.6f; // makes it bounce slightly
+        bc.body.createFixture(fixtureDef);
+        //bc.body.createFixture(treeBox, 0.0f);
+
+        // Clean Up
+        circle.dispose();
+        //treeBox.dispose();
+
+        // Add Body Component to Tree Entity
+        e.add(bc);
+
+        // This isn't used anymore?
+        Vector2 screenMeters = RenderingSystem.getScreenSizeInMeters();
+        Gdx.app.log("Game Screen Warmup", "Screen Meters: " + screenMeters.x + " x " + screenMeters.y);
+        Vector2 screenPixels = RenderingSystem.getScreenSizeInPixesl();
+        Gdx.app.log("Game Screen Warmup", "Screen Pixels:" + screenPixels.x + " x " + screenPixels.y);
+
+        engine.addEntity(e);
+        //return e;
+    }
+
+
+
+    private Array<Entity> getTreeLayer(World world) {
+        Array<Entity> trees = new Array<>();
+
+        Vector3 currPos = new Vector3(4f, 2.0f, 1f);
+        trees.add(buildTreeEntityAt(world, new Vector3(10f, 2.2f, 1f)));
+        trees.add(buildTreeEntityAt(world, new Vector3(20f, 2.2f, 1f)));
+        trees.add(buildTreeEntityAt(world, new Vector3(30f, 2.2f, 1f)));
+
+        /*
+        while(currPos.x < 32f) {
+            trees.add(buildTreeEntityAt(world, new Vector3(currPos.x, currPos.y, currPos.z)));
+            currPos.x += 8f;
+        }
+        */
+
+        return trees;
+    }
+
+    private void addTreeLayer(World world) {
+        Vector3 currPos = new Vector3(10f, 2.0f, 1f);
+        for(int x = 10; x < 40; x+= 10) {
+            addTreeEntityAt(world, x, 5);
+        }
     }
 
     private Entity buildBall(World world) {
