@@ -55,6 +55,15 @@ public class RenderingSystem extends SortedIteratingSystem {
 
         renderQueue = new Array<Entity>();
 
+        // Add a comparator so the queue.sort doesn't crash *crosses fingers*
+
+        comparator = new Comparator<Entity>() {
+            @Override
+            public int compare(Entity entityA, Entity entityB) {
+                return (int)Math.signum(transformM.get(entityB).position.z -
+                        transformM.get(entityA).position.z);
+            }
+        };
 
         this.batch = batch;
 
