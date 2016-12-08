@@ -1,19 +1,17 @@
 package com.exovum.ld37warmup;
 
-import com.badlogic.ashley.core.Engine;
 import com.badlogic.ashley.core.Entity;
 import com.badlogic.ashley.core.PooledEngine;
+import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.math.Frustum;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
 import com.badlogic.gdx.physics.box2d.BodyDef;
 import com.badlogic.gdx.physics.box2d.CircleShape;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
-import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
 import com.badlogic.gdx.utils.Array;
 import com.exovum.ld37warmup.components.BodyComponent;
@@ -35,18 +33,25 @@ import com.exovum.testgame.IScreenDispatcher;
 
 public class GameScreenWarmup extends ScreenAdapter {
 
+    Game game; // Might need this defined as LD37Warmup Game instead
+
     private boolean initialized;
     private float elapsedTime = 0f;
     private int secondsToSplash = 10;
-    private World world; // Box2D World
+    private World world; // **Box2D** World
+
+    private GameWorld gameWorld; // class for creating entities and adding to the world of the game
 
     private PooledEngine engine; // Ashley ECS engine
 
     private SpriteBatch batch;
     private IScreenDispatcher dispatcher;
 
-    public GameScreenWarmup(SpriteBatch batch, IScreenDispatcher dispatcher) {
+    // TODO add InputListener, InputAdapter etc
+
+    public GameScreenWarmup(Game game, SpriteBatch batch, IScreenDispatcher dispatcher) {
         super();
+        this.game = game;
         this.batch = batch;
         this.dispatcher = dispatcher;
     }
@@ -58,6 +63,7 @@ public class GameScreenWarmup extends ScreenAdapter {
         // world has 0 x-acceleration, and -9.8f y-accel [gravity]
         world = new World(new Vector2(0f, -9.8f), true);
         engine = new PooledEngine();
+        gameWorld = new GameWorld(engine);
 
         // create ECS system to process rendering. renders entities via TextureComponents
         RenderingSystem renderingSystem = new RenderingSystem(batch);
@@ -78,10 +84,15 @@ public class GameScreenWarmup extends ScreenAdapter {
         //for(Entity treeEntity: getTreeLayer(world)) {
         //    engine.addEntity(treeEntity);
         //}
-        addTreeEntityAt(world, 4f, 2f);
-        addTreeEntityAt(world, 10f, 2f);
-        addTreeEntityAt(world, 14f, 2f);
+        //addTreeEntityAt(world, 4f, 2f);
+        //addTreeEntityAt(world, 10f, 2f);
+        //addTreeEntityAt(world, 14f, 2f);
         //addTreeLayer(world);
+
+        //addTreeEntityAt2(world, 14f, 2f);
+        //addTreeEntityAt2(world, 20f, 20f); // please work ps it doesnt want to I guess
+
+        gameWorld.create();
 
         initialized = true;
     }
@@ -107,8 +118,8 @@ public class GameScreenWarmup extends ScreenAdapter {
         e.add(new TreeComponent());
 
         AnimationComponent a = new AnimationComponent();
-        a.animations.put("DEFAULT", new Animation(1f/16f, Assets.getTreeArray(), Animation.PlayMode.LOOP));
-        a.animations.put("RUNNING", new Animation(1f/8f, Assets.getTreeMoveArray(), Animation.PlayMode.LOOP));
+        a.animations.put("DEFAULT", new Animation(1f/16f, Assets.getTreeNormalArray(), Animation.PlayMode.LOOP));
+        a.animations.put("RUNNING", new Animation(1f/8f, Assets.getTreeLightsArray(), Animation.PlayMode.LOOP));
         e.add(a);
         StateComponent state = new StateComponent();
         state.set("DEFAULT");
@@ -156,8 +167,8 @@ public class GameScreenWarmup extends ScreenAdapter {
         // Add Animation Component to Tree Entity
         AnimationComponent a = new AnimationComponent();
         // for tag "DEFAULT" put an animation with parameter: duration=1/8f, TextureRegion, PlayMode;
-        a.animations.put("DEFAULT", new Animation(1f/8f, Assets.getTreeArray(), Animation.PlayMode.LOOP));
-        a.animations.put("RUNNING", new Animation(1f/8f, Assets.getTreeMoveArray(), Animation.PlayMode.LOOP));
+        a.animations.put("DEFAULT", new Animation(1f/8f, Assets.getTreeNormalArray(), Animation.PlayMode.LOOP));
+        a.animations.put("RUNNING", new Animation(1f/8f, Assets.getTreeLightsArray(), Animation.PlayMode.LOOP));
         e.add(a);
 
         // Add State Component to Tree Entity
@@ -230,8 +241,8 @@ public class GameScreenWarmup extends ScreenAdapter {
         // Add Animation Component to Tree Entity
         AnimationComponent a = new AnimationComponent();
         // for tag "DEFAULT" put an animation with parameter: duration=1/8f, TextureRegion, PlayMode;
-        a.animations.put("DEFAULT", new Animation(1f/8f, Assets.getTreeArray(), Animation.PlayMode.LOOP));
-        a.animations.put("RUNNING", new Animation(1f/8f, Assets.getTreeMoveArray(), Animation.PlayMode.LOOP));
+        a.animations.put("DEFAULT", new Animation(1f/8f, Assets.getTreeNormalArray(), Animation.PlayMode.LOOP));
+        a.animations.put("RUNNING", new Animation(1f/8f, Assets.getTreeLightsArray(), Animation.PlayMode.LOOP));
         e.add(a);
 
         // Add State Component to Tree Entity
@@ -304,8 +315,8 @@ public class GameScreenWarmup extends ScreenAdapter {
         // Add Animation Component to Tree Entity
         AnimationComponent a = new AnimationComponent();
         // for tag "DEFAULT" put an animation with parameter: duration=1/8f, TextureRegion, PlayMode;
-        a.animations.put("DEFAULT", new Animation(1f/8f, Assets.getTreeArray(), Animation.PlayMode.LOOP));
-        a.animations.put("RUNNING", new Animation(1f/8f, Assets.getTreeMoveArray(), Animation.PlayMode.LOOP));
+        a.animations.put("DEFAULT", new Animation(1f/8f, Assets.getTreeNormalArray(), Animation.PlayMode.LOOP));
+        a.animations.put("RUNNING", new Animation(1f/8f, Assets.getTreeLightsArray(), Animation.PlayMode.LOOP));
         e.add(a);
 
         // Add State Component to Tree Entity
@@ -373,6 +384,34 @@ public class GameScreenWarmup extends ScreenAdapter {
         //return e;
     }
 
+    private void addTreeEntityAt2(World world, float x, float y) {
+        Entity e = engine.createEntity(); //new Entity(); //or? engine.createEntity();
+
+        TreeComponent tree = engine.createComponent(TreeComponent.class);
+        AnimationComponent animation = engine.createComponent(AnimationComponent.class);
+        StateComponent state = engine.createComponent(StateComponent.class);
+        TextureComponent texture = engine.createComponent(TextureComponent.class);
+        TransformComponent position = engine.createComponent(TransformComponent.class);
+        //TODO: add BodyComponent
+
+        animation.animations.put(TreeComponent.STATE_NORMAL, Assets.getTreeNormalAnimation());
+        animation.animations.put(TreeComponent.STATE_LIGHTS, Assets.getTreeLightsAnimation());
+        //animation.animations.put(TreeComponent.STATE_NORMAL, Assets.treeNormal);
+        //animation.animations.put(TreeComponent.STATE_LIGHTS, Assets.treeLights);
+
+        position.position.set(x, y, 3.0f);
+        position.scale.set(0.25f, 0.25f);
+
+        state.set(TreeComponent.STATE_NORMAL);
+
+        e.add(tree);
+        e.add(animation);
+        e.add(state);
+        e.add(texture);
+        e.add(position);
+
+        engine.addEntity(e);
+    }
 
 
     private Array<Entity> getTreeLayer(World world) {

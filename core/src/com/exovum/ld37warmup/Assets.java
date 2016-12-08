@@ -1,9 +1,11 @@
 package com.exovum.ld37warmup;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.audio.Music;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.Array;
@@ -18,6 +20,10 @@ public class Assets {
 
     public static AssetManager am;
 
+    // Resources
+    public static Animation treeNormal;
+    public static Animation treeLights;
+
     public static AssetManager load() {
         // Load the image for the splash screen
         loadSplash();
@@ -30,6 +36,13 @@ public class Assets {
         am.load("sounds/drop.wav", SOUND);
         am.load("sounds/song1.wav", MUSIC);
 
+        // Setup static resources
+        // TODO add this resources to the AssetManager
+        if(am.isLoaded(ANIMATION_ATLAS)) {
+            Gdx.app.log("Assets", "Setting up tree Animations manually");
+            treeNormal = new Animation(1f/8f, getTreeNormalArray(), Animation.PlayMode.LOOP);
+            treeLights = new Animation(1f/8f, getTreeLightsArray(), Animation.PlayMode.LOOP);
+        }
 
         return am;
     }
@@ -58,13 +71,26 @@ public class Assets {
     }
 
 
-    public static Array<TextureAtlas.AtlasRegion> getTreeArray() {
+    public static Array<TextureAtlas.AtlasRegion> getTreeNormalArray() {
         //Array<TextureAtlas.AtlasRegion> treeArray = am.get(ANIMATION_ATLAS, TEXTURE_ATLAS).findRegions("tree/tree");
+        Gdx.app.log("Assets", "Retrieving TreeNormalArray");
         return am.get(ANIMATION_ATLAS, TEXTURE_ATLAS).findRegions("tree/tree");
     }
 
-    public static Array<TextureAtlas.AtlasRegion> getTreeMoveArray() {
+    public static Array<TextureAtlas.AtlasRegion> getTreeLightsArray() {
         //Array<TextureAtlas.AtlasRegion> treeArray = am.get(ANIMATION_ATLAS, TEXTURE_ATLAS).findRegions("tree/lights");
+        Gdx.app.log("Assets", "Retrieving TreeLightsArray");
         return am.get(ANIMATION_ATLAS, TEXTURE_ATLAS).findRegions("tree/lights");
+    }
+
+    public static Animation getTreeNormalAnimation() {
+        // By using getTreeNormalArray, this ensures the Animation can be loaded
+        // because the AssetManager will have loaded the AnimationAtlas and the needed Textures.
+        return new Animation(1f/8f, getTreeNormalArray(), Animation.PlayMode.LOOP);
+    }
+
+    public static Animation getTreeLightsAnimation() {
+
+        return new Animation(1f/8f, getTreeLightsArray(), Animation.PlayMode.LOOP);
     }
 }

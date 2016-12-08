@@ -25,7 +25,7 @@ public class LD37Warmup extends Game {
         batch = new SpriteBatch();
         screenDispatcher = new ScreenDispatcherWarmup();
         Screen splashScreen = new SplashScreenWarmup(batch, screenDispatcher);
-        Screen gameScreen = new GameScreenWarmup(batch, screenDispatcher);
+        Screen gameScreen = new GameScreenWarmup(this, batch, screenDispatcher);
         screenDispatcher.AddScreen(splashScreen);
         screenDispatcher.AddScreen(gameScreen);
         setScreen(splashScreen);
